@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MarsRover
 {
@@ -6,44 +7,62 @@ namespace MarsRover
     {
         private Grid _grid;
         private IHeading _heading;
+        private IEnumerable<Obstacle> _obstacles;
+        private bool _obstacleDetected;
+        private int _obstacleDetectedCoordinateX;
+        private int _obstacleDetectedCoordinateY;
 
-        public Rover(Grid grid, IHeading heading)
+        public Rover(Grid grid, IHeading heading, IEnumerable<Obstacle> Obstacles)
         {
-            _grid = grid.GridEntryAndSizeValidation(grid);
+            _grid = grid;
             _heading = heading;
+            _obstacles = Obstacles;
+            _obstacleDetected = false;
         }
 
         public void TurnLeft() => _heading = _heading.TurnLeft();
 
         public void TurnRight() => _heading = _heading.TurnRight();
 
-        public void MoveForward() => _grid = _heading.MoveForward(_grid);
+        public void MoveForward() => _heading.MoveForward(this, _grid);
 
-        public void MoveBackward() => _grid = _heading.MoveBackward(_grid);
+        public void MoveBackward() => _heading.MoveBackward(this, _grid);
 
         public void InvalidCommand() { }
 
         public string Direction() => _heading.GetHeading();
 
-        public int XCoordinate() => _grid.XCoordinate();
+        public int XCoordinate { get; set; }
 
-        public int YCoodinate() => _grid.YCoordinate();
+        public int YCoordinate { get; set; }
 
-        public int GridHeight() => _grid.GridHeight();
+        public bool ObstacleDetected() => _obstacleDetected;
 
-        public int GridWidth() => _grid.GridWidth();
+        public int ObstacleDetectedXCoordinate() => _obstacleDetectedCoordinateX;
 
-        public Rover ExecuteCommands(string commands)
+        public int ObstacleDetectedYCoordinate() => _obstacleDetectedCoordinateY;
+
+        public void ExecuteCommands(string commands)
         {
             foreach (var letter in commands)
             {
                 var commandInput = new InputCommands(letter.ToString());
-                var commandFactory = commandInput.ValidateAndReturnCommand();
+                var commandFactory = commandInput.ReturnCommand();
                 var command = commandFactory(this);
                 var previousLocation = _grid;
                 command.Execute();
+
+                if (_obstacleDetected = ObstacleFound(XCoordinate, YCoordinate) == true) 
+                {
+                    _obstacleDetectedCoordinateX = XCoordinate;
+                    _obstacleDetectedCoordinateY = YCoordinate;
+                    _grid = previousLocation;
+                    break; 
+                }
             }
-            return this;
         }
+
+        private bool ObstacleFound(int xCoordinate, int yCoordinate) => 
+            _obstacles.Any(obstacle => obstacle.ObstacleCoordinateX() == xCoordinate && obstacle.ObstacleCoordinateY() == yCoordinate);
     }
 }

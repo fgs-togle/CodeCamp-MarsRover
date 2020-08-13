@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using MarsRover;
 
 namespace NUnitTestMarsRover
@@ -27,11 +28,14 @@ namespace NUnitTestMarsRover
         [TestCase("g", "MarsRover.InvalidCommand")]
         public void ValidateAndReturnCommand_GivenACommandLetter_ReturnTheProperCommandName(string input, string commandName)
         {
-            var grid = new Grid(3, 3, 5, 5);
+            var grid = new Grid(5, 5);
             var heading = new NorthHeading();
-            var rover = new Rover(grid, heading);
+            var obstacle = new List<Obstacle>();
+            var rover = new Rover(grid, heading, obstacle);
+            rover.XCoordinate = 3;
+            rover.YCoordinate = 3;
             var commandInput = new InputCommands(input);
-            var commandFactory = commandInput.ValidateAndReturnCommand();
+            var commandFactory = commandInput.ReturnCommand();
             var command = commandFactory(rover);
             Assert.That(command.ToString(), Is.EqualTo(commandName));
         }

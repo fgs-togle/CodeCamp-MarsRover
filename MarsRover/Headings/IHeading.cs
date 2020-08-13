@@ -5,8 +5,8 @@ namespace MarsRover
     {
         public IHeading TurnRight();
         public IHeading TurnLeft();
-        public Grid MoveForward(Grid grid);
-        public Grid MoveBackward(Grid grid);
+        public void MoveForward(Rover rover, Grid grid);
+        public void MoveBackward(Rover rover, Grid grid);
         public string GetHeading();
     }
 }

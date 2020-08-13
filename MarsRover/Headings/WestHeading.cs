@@ -1,4 +1,5 @@
-﻿
+﻿using MarsRover.Headings;
+
 namespace MarsRover
 {
     public class WestHeading : IHeading
@@ -7,20 +8,18 @@ namespace MarsRover
 
         public IHeading TurnLeft() => new SouthHeading();
 
-        public Grid MoveForward(Grid grid)
+        public void MoveForward(Rover rover, Grid grid)
         {
-            var x = grid.XCoordinate();
-            x = (grid.XCoordinate() > 0) ? x -= 1 : grid.GridWidth();
-            return grid = new Grid(x, grid.YCoordinate(), grid.GridWidth(), grid.GridHeight());
+            var currentX = rover.XCoordinate;
+            rover.XCoordinate = (currentX > 0) ? currentX -= 1 : grid.GridWidth();
         }
 
-        public Grid MoveBackward(Grid grid)
+        public void MoveBackward(Rover rover, Grid grid)
         {
-            var x = grid.XCoordinate();
-            x = (grid.XCoordinate() < grid.GridWidth()) ? x += 1 : 0;
-            return grid = new Grid(x, grid.YCoordinate(), grid.GridWidth(), grid.GridHeight());
+            var currentX = rover.XCoordinate;
+            rover.XCoordinate = (currentX < grid.GridWidth()) ? currentX += 1 : 0;
         }
 
-        public string GetHeading() => "West";
+        public string GetHeading() => HeadingNames.Headings.West.ToString();
     }
 }

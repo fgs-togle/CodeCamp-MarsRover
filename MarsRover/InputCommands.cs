@@ -9,9 +9,9 @@ namespace MarsRover
 
         public InputCommands(string input) => _input = input.ToUpper();
 
-        public Func<Rover, ICommand> ValidateAndReturnCommand()
+        public Func<Rover, ICommand> ReturnCommand()
         {
-            if (ValidCommandLetter(_input))
+            if (IsValidCommandLetter(_input))
             {
                 switch (_input)
                 {
@@ -30,7 +30,7 @@ namespace MarsRover
 
         }
 
-        private bool ValidCommandLetter(string input) => Array.Exists(_commands, commandLetter => commandLetter == input);
+        private bool IsValidCommandLetter(string input) => Array.Exists(_commands, commandLetter => commandLetter == input);
 
         public string InputCommand() => _input;
 
